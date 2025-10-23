@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цветовые модели</title>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .color-preview {
+            width: 200px;
+            height: 100px;
+            border: 2px solid #333;
+            margin: 20px auto;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .color-model {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .slider-group {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .slider-group label {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+        }
+        input[type="range"] {
+            width: 300px;
+            height: 6px;
+            border-radius: 3px;
+        }
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .color-hex {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .value-display {
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Цветовые модели: RGB, CMYK, HSV, HSL</h1>
+        
+        <div class="color-preview" id="colorPreview"></div>
+        <div class="color-hex" id="colorHex">#FFFFFF</div>
+
+        <!-- RGB Model -->
+        <div class="color-model">
+            <h3>RGB Model (Red, Green, Blue)</h3>
+            <div class="slider-group">
+                <label>Red: <span id="rgbRValue" class="value-display">255</span></label>
+                <input type="range" min="0" max="255" value="255" id="rgbR">
+                <input type="number" min="0" max="255" value="255" id="rgbRInput">
+            </div>
+            <div class="slider-group">
+                <label>Green: <span id="rgbGValue" class="value-display">255</span></label>
+                <input type="range" min="0" max="255" value="255" id="rgbG">
+                <input type="number" min="0" max="255" value="255" id="rgbGInput">
+            </div>
+            <div class="slider-group">
+                <label>Blue: <span id="rgbBValue" class="value-display">255</span></label>
+                <input type="range" min="0" max="255" value="255" id="rgbB">
+                <input type="number" min="0" max="255" value="255" id="rgbBInput">
+            </div>
+        </div>
+
+        <!-- CMYK Model -->
+        <div class="color-model">
+            <h3>CMYK Model (Cyan, Magenta, Yellow, Key/Black)</h3>
+            <div class="slider-group">
+                <label>Cyan: <span id="cmykCValue" class="value-display">0</span>%</label>
+                <input type="range" min="0" max="100" value="0" id="cmykC">
+                <input type="number" min="0" max="100" value="0" id="cmykCInput">
+            </div>
+            <div class="slider-group">
+                <label>Magenta: <span id="cmykMValue" class="value-display">0</span>%</label>
+                <input type="range" min="0" max="100" value="0" id="cmykM">
+                <input type="number" min="0" max="100" value="0" id="cmykMInput">
+            </div>
+            <div class="slider-group">
+                <label>Yellow: <span id="cmykYValue" class="value-display">0</span>%</label>
+                <input type="range" min="0" max="100" value="0" id="cmykY">
+                <input type="number" min="0" max="100" value="0" id="cmykYInput">
+            </div>
+            <div class="slider-group">
+                <label>Black: <span id="cmykKValue" class="value-display">0</span>%</label>
+                <input type="range" min="0" max="100" value="0" id="cmykK">
+                <input type="number" min="0" max="100" value="0" id="cmykKInput">
+            </div>
+        </div>
+
+        <!-- HSV Model -->
+        <div class="color-model">
+            <h3>HSV Model (Hue, Saturation, Value)</h3>
+            <div class="slider-group">
+                <label>Hue: <span id="hsvHValue" class="value-display">0</span>°</label>
+                <input type="range" min="0" max="360" value="0" id="hsvH">
+                <input type="number" min="0" max="360" value="0" id="hsvHInput">
+            </div>
+            <div class="slider-group">
+                <label>Saturation: <span id="hsvSValue" class="value-display">0</span>%</label>
+                <input type="range" min="0" max="100" value="0" id="hsvS">
+                <input type="number" min="0" max="100" value="0" id="hsvSInput">
+            </div>
+            <div class="slider-group">
+                <label>Value: <span id="hsvVValue" class="value-display">100</span>%</label>
+                <input type="range" min="0" max="100" value="100" id="hsvV">
+                <input type="number" min="0" max="100" value="100" id="hsvVInput">
+            </div>
+        </div>
+
+        <!-- HSL Model -->
+        <div class="color-model">
+            <h3>HSL Model (Hue, Saturation, Lightness)</h3>
+            <div class="slider-group">
+                <label>Hue: <span id="hslHValue" class="value-display">0</span>°</label>
+                <input type="range" min="0" max="360" value="0" id="hslH">
+                <input type="number" min="0" max="360" value="0" id="hslHInput">
+            </div>
+            <div class="slider-group">
+                <label>Saturation: <span id="hslSValue" class="value-display">0</span>%</label>
+                <input type="range" min="0" max="100" value="0" id="hslS">
+                <input type="number" min="0" max="100" value="0" id="hslSInput">
+            </div>
+            <div class="slider-group">
+                <label>Lightness: <span id="hslLValue" class="value-display">100</span>%</label>
+                <input type="range" min="0" max="100" value="100" id="hslL">
+                <input type="number" min="0" max="100" value="100" id="hslLInput">
+            </div>
+        </div>
+
+        <button onclick="showColorPicker()">Выбрать из палитры</button>
+        <input type="color" id="colorPicker" style="display: none" onchange="colorPickerChanged(this.value)">
+    </div>
+
+    <script>
+        class ColorConverter {
+            static rgbToCmyk(r, g, b) {
+                if (r === 0 && g === 0 && b === 0) {
+                    return [0, 0, 0, 100];
+                }
+                
+                const c = 1 - (r / 255);
+                const m = 1 - (g / 255);
+                const y = 1 - (b / 255);
+                
+                const k = Math.min(c, m, y);
+                
+                return [
+                    ((c - k) / (1 - k)) * 100,
+                    ((m - k) / (1 - k)) * 100,
+                    ((y - k) / (1 - k)) * 100,
+                    k * 100
+                ];
+            }
+
+            static cmykToRgb(c, m, y, k) {
+                c = c / 100;
+                m = m / 100;
+                y = y / 100;
+                k = k / 100;
+                
+                return [
+                    Math.round(255 * (1 - c) * (1 - k)),
+                    Math.round(255 * (1 - m) * (1 - k)),
+                    Math.round(255 * (1 - y) * (1 - k))
+                ];
+            }
+
+            static rgbToHsv(r, g, b) {
+                r /= 255;
+                g /= 255;
+                b /= 255;
+                
+                const max = Math.max(r, g, b);
+                const min = Math.min(r, g, b);
+                const delta = max - min;
+                
+                let h = 0;
+                let s = max === 0 ? 0 : delta / max;
+                let v = max;
+                
+                if (delta !== 0) {
+                    if (max === r) h = (g - b) / delta + (g < b ? 6 : 0);
+                    else if (max === g) h = (b - r) / delta + 2;
+                    else h = (r - g) / delta + 4;
+                    h /= 6;
+                }
+                
+                return [h * 360, s * 100, v * 100];
+            }
+
+            static hsvToRgb(h, s, v) {
+                h = (h % 360) / 360;
+                s = s / 100;
+                v = v / 100;
+                
+                let r, g, b;
+                
+                const i = Math.floor(h * 6);
+                const f = h * 6 - i;
+                const p = v * (1 - s);
+                const q = v * (1 - f * s);
+                const t = v * (1 - (1 - f) * s);
+                
+                switch (i % 6) {
+                    case 0: [r, g, b] = [v, t, p]; break;
+                    case 1: [r, g, b] = [q, v, p]; break;
+                    case 2: [r, g, b] = [p, v, t]; break;
+                    case 3: [r, g, b] = [p, q, v]; break;
+                    case 4: [r, g, b] = [t, p, v]; break;
+                    case 5: [r, g, b] = [v, p, q]; break;
+                }
+                
+                return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+            }
+
+            static rgbToHsl(r, g, b) {
+                r /= 255;
+                g /= 255;
+                b /= 255;
+                
+                const max = Math.max(r, g, b);
+                const min = Math.min(r, g, b);
+                let h, s, l = (max + min) / 2;
+                
+                if (max === min) {
+                    h = s = 0;
+                } else {
+                    const delta = max - min;
+                    s = l > 0.5 ? delta / (2 - max - min) : delta / (max + min);
+                    
+                    if (max === r) h = (g - b) / delta + (g < b ? 6 : 0);
+                    else if (max === g) h = (b - r) / delta + 2;
+                    else h = (r - g) / delta + 4;
+                    h /= 6;
+                }
+                
+                return [h * 360, s * 100, l * 100];
+            }
+
+            static hslToRgb(h, s, l) {
+                h = (h % 360) / 360;
+                s = s / 100;
+                l = l / 100;
+                
+                let r, g, b;
+                
+                if (s === 0) {
+                    r = g = b = l;
+                } else {
+                    const hue2rgb = (p, q, t) => {
+                        if (t < 0) t += 1;
+                        if (t > 1) t -= 1;
+                        if (t < 1/6) return p + (q - p) * 6 * t;
+                        if (t < 1/2) return q;
+                        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                        return p;
+                    };
+                    
+                    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                    const p = 2 * l - q;
+                    
+                    r = hue2rgb(p, q, h + 1/3);
+                    g = hue2rgb(p, q, h);
+                    b = hue2rgb(p, q, h - 1/3);
+                }
+                
+                return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+            }
+        }
+
+        class ColorManager {
+            constructor() {
+                this.currentColor = { r: 255, g: 255, b: 255 };
+                this.updating = false;
+                this.initializeEventListeners();
+                this.updateAllDisplays();
+            }
+
+            initializeEventListeners() {
+               
+                ['r', 'g', 'b'].forEach(channel => {
+                    const slider = document.getElementById(`rgb${channel.toUpperCase()}`);
+                    const input = document.getElementById(`rgb${channel.toUpperCase()}Input`);
+                    
+                    this.setupSliderListener(slider, () => {
+                        this.currentColor[channel] = parseInt(slider.value);
+                        this.updateFromRgb();
+                    });
+                    
+                    this.setupInputListener(input, (value) => {
+                        this.currentColor[channel] = Math.min(255, Math.max(0, value));
+                        this.updateFromRgb();
+                    });
+                });
+
+               
+                ['c', 'm', 'y', 'k'].forEach(channel => {
+                    const slider = document.getElementById(`cmyk${channel.toUpperCase()}`);
+                    const input = document.getElementById(`cmyk${channel.toUpperCase()}Input`);
+                    
+                    this.setupSliderListener(slider, () => {
+                        if (this.updating) return;
+                        const c = parseInt(document.getElementById('cmykC').value);
+                        const m = parseInt(document.getElementById('cmykM').value);
+                        const y = parseInt(document.getElementById('cmykY').value);
+                        const k = parseInt(document.getElementById('cmykK').value);
+                        
+                        const rgb = ColorConverter.cmykToRgb(c, m, y, k);
+                        this.currentColor = { r: rgb[0], g: rgb[1], b: rgb[2] };
+                        this.updateFromRgb();
+                    });
+                    
+                    this.setupInputListener(input, (value) => {
+                        if (this.updating) return;
+                        const c = parseInt(document.getElementById('cmykCInput').value) || 0;
+                        const m = parseInt(document.getElementById('cmykMInput').value) || 0;
+                        const y = parseInt(document.getElementById('cmykYInput').value) || 0;
+                        const k = parseInt(document.getElementById('cmykKInput').value) || 0;
+                        
+                        const rgb = ColorConverter.cmykToRgb(c, m, y, k);
+                        this.currentColor = { r: rgb[0], g: rgb[1], b: rgb[2] };
+                        this.updateFromRgb();
+                    });
+                });
+
+               
+                ['h', 's', 'v'].forEach(channel => {
+                    const slider = document.getElementById(`hsv${channel.toUpperCase()}`);
+                    const input = document.getElementById(`hsv${channel.toUpperCase()}Input`);
+                    
+                    this.setupSliderListener(slider, () => {
+                        if (this.updating) return;
+                        const h = parseInt(document.getElementById('hsvH').value);
+                        const s = parseInt(document.getElementById('hsvS').value);
+                        const v = parseInt(document.getElementById('hsvV').value);
+                        
+                        const rgb = ColorConverter.hsvToRgb(h, s, v);
+                        this.currentColor = { r: rgb[0], g: rgb[1], b: rgb[2] };
+                        this.updateFromRgb();
+                    });
+                    
+                    this.setupInputListener(input, (value) => {
+                        if (this.updating) return;
+                        const h = parseInt(document.getElementById('hsvHInput').value) || 0;
+                        const s = parseInt(document.getElementById('hsvSInput').value) || 0;
+                        const v = parseInt(document.getElementById('hsvVInput').value) || 0;
+                        
+                        const rgb = ColorConverter.hsvToRgb(h, s, v);
+                        this.currentColor = { r: rgb[0], g: rgb[1], b: rgb[2] };
+                        this.updateFromRgb();
+                    });
+                });
+
+               
+                ['h', 's', 'l'].forEach(channel => {
+                    const slider = document.getElementById(`hsl${channel.toUpperCase()}`);
+                    const input = document.getElementById(`hsl${channel.toUpperCase()}Input`);
+                    
+                    this.setupSliderListener(slider, () => {
+                        if (this.updating) return;
+                        const h = parseInt(document.getElementById('hslH').value);
+                        const s = parseInt(document.getElementById('hslS').value);
+                        const l = parseInt(document.getElementById('hslL').value);
+                        
+                        const rgb = ColorConverter.hslToRgb(h, s, l);
+                        this.currentColor = { r: rgb[0], g: rgb[1], b: rgb[2] };
+                        this.updateFromRgb();
+                    });
+                    
+                    this.setupInputListener(input, (value) => {
+                        if (this.updating) return;
+                        const h = parseInt(document.getElementById('hslHInput').value) || 0;
+                        const s = parseInt(document.getElementById('hslSInput').value) || 0;
+                        const l = parseInt(document.getElementById('hslLInput').value) || 0;
+                        
+                        const rgb = ColorConverter.hslToRgb(h, s, l);
+                        this.currentColor = { r: rgb[0], g: rgb[1], b: rgb[2] };
+                        this.updateFromRgb();
+                    });
+                });
+            }
+
+            setupSliderListener(slider, callback) {
+                slider.addEventListener('input', (e) => {
+                    if (this.updating) return;
+                    callback();
+                });
+            }
+
+            setupInputListener(input, callback) {
+                input.addEventListener('input', (e) => {
+                    if (this.updating) return;
+                    const value = parseInt(e.target.value) || 0;
+                    callback(value);
+                });
+                
+                
+                input.addEventListener('change', (e) => {
+                    if (this.updating) return;
+                    const value = parseInt(e.target.value) || 0;
+                    callback(value);
+                });
+            }
+
+            updateFromRgb() {
+                this.updating = true;
+                
+                const { r, g, b } = this.currentColor;
+                
+                
+                document.getElementById('colorPreview').style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+                document.getElementById('colorHex').textContent = `#${this.toHex(r)}${this.toHex(g)}${this.toHex(b)}`;
+                
+               
+                document.getElementById('rgbR').value = r;
+                document.getElementById('rgbRInput').value = r;
+                document.getElementById('rgbRValue').textContent = r;
+                
+                document.getElementById('rgbG').value = g;
+                document.getElementById('rgbGInput').value = g;
+                document.getElementById('rgbGValue').textContent = g;
+                
+                document.getElementById('rgbB').value = b;
+                document.getElementById('rgbBInput').value = b;
+                document.getElementById('rgbBValue').textContent = b;
+                
+               
+                this.updateCmykDisplay(r, g, b);
+                this.updateHsvDisplay(r, g, b);
+                this.updateHslDisplay(r, g, b);
+                
+                this.updating = false;
+            }
+
+            updateCmykDisplay(r, g, b) {
+                const [c, m, y, k] = ColorConverter.rgbToCmyk(r, g, b);
+                
+                const cRounded = Math.round(c);
+                const mRounded = Math.round(m);
+                const yRounded = Math.round(y);
+                const kRounded = Math.round(k);
+                
+                document.getElementById('cmykC').value = cRounded;
+                document.getElementById('cmykCInput').value = cRounded;
+                document.getElementById('cmykCValue').textContent = cRounded;
+                
+                document.getElementById('cmykM').value = mRounded;
+                document.getElementById('cmykMInput').value = mRounded;
+                document.getElementById('cmykMValue').textContent = mRounded;
+                
+                document.getElementById('cmykY').value = yRounded;
+                document.getElementById('cmykYInput').value = yRounded;
+                document.getElementById('cmykYValue').textContent = yRounded;
+                
+                document.getElementById('cmykK').value = kRounded;
+                document.getElementById('cmykKInput').value = kRounded;
+                document.getElementById('cmykKValue').textContent = kRounded;
+            }
+
+            updateHsvDisplay(r, g, b) {
+                const [h, s, v] = ColorConverter.rgbToHsv(r, g, b);
+                
+                const hRounded = Math.round(h);
+                const sRounded = Math.round(s);
+                const vRounded = Math.round(v);
+                
+                document.getElementById('hsvH').value = hRounded;
+                document.getElementById('hsvHInput').value = hRounded;
+                document.getElementById('hsvHValue').textContent = hRounded;
+                
+                document.getElementById('hsvS').value = sRounded;
+                document.getElementById('hsvSInput').value = sRounded;
+                document.getElementById('hsvSValue').textContent = sRounded;
+                
+                document.getElementById('hsvV').value = vRounded;
+                document.getElementById('hsvVInput').value = vRounded;
+                document.getElementById('hsvVValue').textContent = vRounded;
+            }
+
+            updateHslDisplay(r, g, b) {
+                const [h, s, l] = ColorConverter.rgbToHsl(r, g, b);
+                
+                const hRounded = Math.round(h);
+                const sRounded = Math.round(s);
+                const lRounded = Math.round(l);
+                
+                document.getElementById('hslH').value = hRounded;
+                document.getElementById('hslHInput').value = hRounded;
+                document.getElementById('hslHValue').textContent = hRounded;
+                
+                document.getElementById('hslS').value = sRounded;
+                document.getElementById('hslSInput').value = sRounded;
+                document.getElementById('hslSValue').textContent = sRounded;
+                
+                document.getElementById('hslL').value = lRounded;
+                document.getElementById('hslLInput').value = lRounded;
+                document.getElementById('hslLValue').textContent = lRounded;
+            }
+
+            toHex(value) {
+                return value.toString(16).padStart(2, '0').toUpperCase();
+            }
+
+            updateAllDisplays() {
+                this.updateFromRgb();
+            }
+        }
+
+        function showColorPicker() {
+            document.getElementById('colorPicker').click();
+        }
+
+        function colorPickerChanged(color) {
+            const hex = color.substring(1);
+            const r = parseInt(hex.substr(0, 2), 16);
+            const g = parseInt(hex.substr(2, 2), 16);
+            const b = parseInt(hex.substr(4, 2), 16);
+            
+            colorManager.currentColor = { r, g, b };
+            colorManager.updateFromRgb();
+        }
+
+        
+        const colorManager = new ColorManager();
+    </script>
+</body>
+</html>
