@@ -75,11 +75,15 @@
             font-weight: bold;
             color: #333;
         }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Цветовые модели: RGB, CMYK, HSV, HSL</h1>
+        <h1>Цветовые модели: RGB, CMYK, HSL</h1>
         
         <div class="color-preview" id="colorPreview"></div>
         <div class="color-hex" id="colorHex">#FFFFFF</div>
@@ -126,26 +130,6 @@
                 <label>Black: <span id="cmykKValue" class="value-display">0</span>%</label>
                 <input type="range" min="0" max="100" value="0" id="cmykK">
                 <input type="number" min="0" max="100" value="0" id="cmykKInput">
-            </div>
-        </div>
-
-        <!-- HSV Model -->
-        <div class="color-model">
-            <h3>HSV Model (Hue, Saturation, Value)</h3>
-            <div class="slider-group">
-                <label>Hue: <span id="hsvHValue" class="value-display">0</span>°</label>
-                <input type="range" min="0" max="360" value="0" id="hsvH">
-                <input type="number" min="0" max="360" value="0" id="hsvHInput">
-            </div>
-            <div class="slider-group">
-                <label>Saturation: <span id="hsvSValue" class="value-display">0</span>%</label>
-                <input type="range" min="0" max="100" value="0" id="hsvS">
-                <input type="number" min="0" max="100" value="0" id="hsvSInput">
-            </div>
-            <div class="slider-group">
-                <label>Value: <span id="hsvVValue" class="value-display">100</span>%</label>
-                <input type="range" min="0" max="100" value="100" id="hsvV">
-                <input type="number" min="0" max="100" value="100" id="hsvVInput">
             </div>
         </div>
 
@@ -205,54 +189,6 @@
                     Math.round(255 * (1 - m) * (1 - k)),
                     Math.round(255 * (1 - y) * (1 - k))
                 ];
-            }
-
-            static rgbToHsv(r, g, b) {
-                r /= 255;
-                g /= 255;
-                b /= 255;
-                
-                const max = Math.max(r, g, b);
-                const min = Math.min(r, g, b);
-                const delta = max - min;
-                
-                let h = 0;
-                let s = max === 0 ? 0 : delta / max;
-                let v = max;
-                
-                if (delta !== 0) {
-                    if (max === r) h = (g - b) / delta + (g < b ? 6 : 0);
-                    else if (max === g) h = (b - r) / delta + 2;
-                    else h = (r - g) / delta + 4;
-                    h /= 6;
-                }
-                
-                return [h * 360, s * 100, v * 100];
-            }
-
-            static hsvToRgb(h, s, v) {
-                h = (h % 360) / 360;
-                s = s / 100;
-                v = v / 100;
-                
-                let r, g, b;
-                
-                const i = Math.floor(h * 6);
-                const f = h * 6 - i;
-                const p = v * (1 - s);
-                const q = v * (1 - f * s);
-                const t = v * (1 - (1 - f) * s);
-                
-                switch (i % 6) {
-                    case 0: [r, g, b] = [v, t, p]; break;
-                    case 1: [r, g, b] = [q, v, p]; break;
-                    case 2: [r, g, b] = [p, v, t]; break;
-                    case 3: [r, g, b] = [p, q, v]; break;
-                    case 4: [r, g, b] = [t, p, v]; break;
-                    case 5: [r, g, b] = [v, p, q]; break;
-                }
-                
-                return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
             }
 
             static rgbToHsl(r, g, b) {
@@ -319,7 +255,7 @@
             }
 
             initializeEventListeners() {
-               
+                // RGB listeners
                 ['r', 'g', 'b'].forEach(channel => {
                     const slider = document.getElementById(`rgb${channel.toUpperCase()}`);
                     const input = document.getElementById(`rgb${channel.toUpperCase()}Input`);
@@ -335,7 +271,7 @@
                     });
                 });
 
-               
+                // CMYK listeners
                 ['c', 'm', 'y', 'k'].forEach(channel => {
                     const slider = document.getElementById(`cmyk${channel.toUpperCase()}`);
                     const input = document.getElementById(`cmyk${channel.toUpperCase()}Input`);
@@ -365,35 +301,7 @@
                     });
                 });
 
-               
-                ['h', 's', 'v'].forEach(channel => {
-                    const slider = document.getElementById(`hsv${channel.toUpperCase()}`);
-                    const input = document.getElementById(`hsv${channel.toUpperCase()}Input`);
-                    
-                    this.setupSliderListener(slider, () => {
-                        if (this.updating) return;
-                        const h = parseInt(document.getElementById('hsvH').value);
-                        const s = parseInt(document.getElementById('hsvS').value);
-                        const v = parseInt(document.getElementById('hsvV').value);
-                        
-                        const rgb = ColorConverter.hsvToRgb(h, s, v);
-                        this.currentColor = { r: rgb[0], g: rgb[1], b: rgb[2] };
-                        this.updateFromRgb();
-                    });
-                    
-                    this.setupInputListener(input, (value) => {
-                        if (this.updating) return;
-                        const h = parseInt(document.getElementById('hsvHInput').value) || 0;
-                        const s = parseInt(document.getElementById('hsvSInput').value) || 0;
-                        const v = parseInt(document.getElementById('hsvVInput').value) || 0;
-                        
-                        const rgb = ColorConverter.hsvToRgb(h, s, v);
-                        this.currentColor = { r: rgb[0], g: rgb[1], b: rgb[2] };
-                        this.updateFromRgb();
-                    });
-                });
-
-               
+                // HSL listeners
                 ['h', 's', 'l'].forEach(channel => {
                     const slider = document.getElementById(`hsl${channel.toUpperCase()}`);
                     const input = document.getElementById(`hsl${channel.toUpperCase()}Input`);
@@ -436,7 +344,7 @@
                     callback(value);
                 });
                 
-                
+                // Также обрабатываем нажатие Enter
                 input.addEventListener('change', (e) => {
                     if (this.updating) return;
                     const value = parseInt(e.target.value) || 0;
@@ -449,11 +357,11 @@
                 
                 const { r, g, b } = this.currentColor;
                 
-                
+                // Update preview
                 document.getElementById('colorPreview').style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
                 document.getElementById('colorHex').textContent = `#${this.toHex(r)}${this.toHex(g)}${this.toHex(b)}`;
                 
-               
+                // Update RGB displays
                 document.getElementById('rgbR').value = r;
                 document.getElementById('rgbRInput').value = r;
                 document.getElementById('rgbRValue').textContent = r;
@@ -466,9 +374,8 @@
                 document.getElementById('rgbBInput').value = b;
                 document.getElementById('rgbBValue').textContent = b;
                 
-               
+                // Update other models
                 this.updateCmykDisplay(r, g, b);
-                this.updateHsvDisplay(r, g, b);
                 this.updateHslDisplay(r, g, b);
                 
                 this.updating = false;
@@ -497,26 +404,6 @@
                 document.getElementById('cmykK').value = kRounded;
                 document.getElementById('cmykKInput').value = kRounded;
                 document.getElementById('cmykKValue').textContent = kRounded;
-            }
-
-            updateHsvDisplay(r, g, b) {
-                const [h, s, v] = ColorConverter.rgbToHsv(r, g, b);
-                
-                const hRounded = Math.round(h);
-                const sRounded = Math.round(s);
-                const vRounded = Math.round(v);
-                
-                document.getElementById('hsvH').value = hRounded;
-                document.getElementById('hsvHInput').value = hRounded;
-                document.getElementById('hsvHValue').textContent = hRounded;
-                
-                document.getElementById('hsvS').value = sRounded;
-                document.getElementById('hsvSInput').value = sRounded;
-                document.getElementById('hsvSValue').textContent = sRounded;
-                
-                document.getElementById('hsvV').value = vRounded;
-                document.getElementById('hsvVInput').value = vRounded;
-                document.getElementById('hsvVValue').textContent = vRounded;
             }
 
             updateHslDisplay(r, g, b) {
